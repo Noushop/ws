@@ -17,7 +17,7 @@ class PurchaseController extends Controller
       'page' => 'integer|min:0'
     ]);
 
-    $perPage = 10;
+    $perPage = 30;
 
     if ($validator->fails()) {
       return response()->json([
@@ -34,6 +34,8 @@ class PurchaseController extends Controller
         'status' => true,
         'message' => '',
         'purchases' => Purchase::whereBetween('created_at', [$startDate, $endDate])
+          ->orWhereDate('created_at', $request->dateStart)
+          ->orWhereDate('created_at', $request->dateEnd)
           ->with('product')
           ->with('user')
           ->orderBy('created_at', 'desc')

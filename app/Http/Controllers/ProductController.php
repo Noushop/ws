@@ -17,7 +17,7 @@ class ProductController extends Controller
         ->orwhere('barcode', 'LIKE', "%$request->search%")
         ->paginate(6);
     } else {
-      $products = Product::paginate(6);
+      $products = Product::paginate(30);
     }
 
     return response()->json($products, 200);

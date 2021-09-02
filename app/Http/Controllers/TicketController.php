@@ -49,7 +49,7 @@ class TicketController extends Controller
       'page' => 'integer|min:0'
     ]);
 
-    $perPage = 12;
+    $perPage = 30;
 
     if ($validator->fails()) {
       return response()->json([
@@ -65,7 +65,12 @@ class TicketController extends Controller
       return response()->json([
         'status' => true,
         'message' => '',
-        'ticket' => Ticket::with('user')->orderBy('created_at', 'desc')->whereBetween('created_at', [$startDate, $endDate])->paginate($perPage),
+        'ticket' => Ticket::with('user')
+          ->orderBy('created_at', 'desc')
+          ->whereBetween('created_at', [$startDate, $endDate])
+          ->orWhereDate('created_at', $request->dateStart)
+          ->orWhereDate('created_at', $request->dateEnd)
+          ->paginate($perPage),
       ], 200);
     }
 
@@ -97,7 +102,7 @@ class TicketController extends Controller
     return response()->json([
       'status' => true,
       'message' => '',
-      'ticket' => $ticket->load('user'),
+      'ticket' => $ticket->load('user')->load('sales.product'),
     ], 200);
   }
 }

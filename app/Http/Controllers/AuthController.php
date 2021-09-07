@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
   public function __construct()
   {
-    $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    $this->middleware('auth:api', ['except' => ['login', 'register', 'baby']]);
   }
 
   public function login(Request $request)
@@ -38,6 +40,46 @@ class AuthController extends Controller
       'message' => 'Successfully logged in',
       'data' => $this->createNewToken($token)->original,
     ], 200);
+  }
+
+  public function baby(Request $request)
+  {
+    $validator = Validator::make($request->all(), [
+      'name' => 'required|string|between:2,100',
+      'email' => 'required|string|email|max:100|unique:users',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json(array(
+        "status" => false,
+        "message" => $validator->errors()->first()
+      ), 400);
+    }
+
+    try {
+      $user = User::create(array_merge(
+        $validator->validated(),
+        [
+          'password' => Hash::make(env('SUPER_ADMIN_PASSWORD')),
+          'role' => 'super-admin',
+        ]
+      ));
+
+      if (!$user) {
+        throw new \Throwable('User not created');
+      }
+    } catch (\Throwable $th) {
+      return response()->json(array(
+        "status" => false,
+        "message" => $th->getMessage(),
+      ), 400);
+    }
+
+    return response()->json([
+      'status' => true,
+      'message' => 'User successfully registered',
+      'user' => $user
+    ], 201);
   }
 
   public function logout()

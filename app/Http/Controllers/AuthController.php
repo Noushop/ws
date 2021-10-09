@@ -60,7 +60,7 @@ class AuthController extends Controller
       $user = User::create(array_merge(
         $validator->validated(),
         [
-          'password' => Hash::make(env('SUPER_ADMIN_PASSWORD')),
+          'password' => Hash::make(env('SUPER_ADMIN_PASSWORD') || 'password'),
           'role' => 'super-admin',
         ]
       ));
@@ -92,14 +92,6 @@ class AuthController extends Controller
     ], 200);
   }
 
-  public function refresh()
-  {
-    return response()->json([
-      'status' => true,
-      'message' => 'Token refreshed',
-      'data' => $this->createNewToken(auth()->refresh()),
-    ] . 201);
-  }
 
   public function userProfile()
   {
@@ -107,7 +99,7 @@ class AuthController extends Controller
       'status' => true,
       'message' => 'User information',
       'user' => auth()->user(),
-    ]);
+    ], 200);
   }
 
   protected function createNewToken($token)
@@ -120,3 +112,12 @@ class AuthController extends Controller
     ], 201);
   }
 }
+
+// public function refresh()
+// {
+//   return response()->json([
+//     'status' => true,
+//     'message' => 'Token refreshed',
+//     'data' => $this->createNewToken(auth()->refresh()),
+//   ] . 201);
+// }

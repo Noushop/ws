@@ -19,9 +19,9 @@ Route::group([
   ], function () {
     Route::post('login', [AuthController::class, 'login'])->name('login');
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
     Route::get('user-profile', [AuthController::class, 'userProfile']);
     Route::post('just-the-two-of-us', [AuthController::class, 'baby']);
+    // Route::post('refresh', [AuthController::class, 'refresh']);
   });
 });
 

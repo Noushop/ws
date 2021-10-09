@@ -34,8 +34,9 @@ jobs:
     - name: Prepare Laravel Application
       run: |
         cp .env.ci .env
+        cp .env.ci .env.test
         php artisan key:generate
-        
+
     - name: JWT token key
       run: php artisan jwt:secret
 

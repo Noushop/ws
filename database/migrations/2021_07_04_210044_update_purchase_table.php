@@ -15,7 +15,9 @@ class UpdatePurchaseTable extends Migration
   {
     Schema::table('purchases', function (Blueprint $table) {
       $table->dropForeign('purchases_product_barcode_foreign');
-      $table->foreign('product_barcode')->references('barcode')->on('products')->onUpdate('cascade');
+      $table->dropForeign('purchases_user_id_foreign');
+      // $table->foreign('product_barcode')->references('barcode')->on('products')->onUpdate('cascade')->onDelete('cascade');
+      // $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
     });
   }
 

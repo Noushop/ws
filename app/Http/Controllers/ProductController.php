@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
 use App\Models\Purchase;
-use GuzzleHttp\Handler\Proxy;
 
 class ProductController extends Controller
 {

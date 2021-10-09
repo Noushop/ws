@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  phpunit:
+  phpvalidation:
     runs-on: ubuntu-latest
     container:
       image: kirschbaumdevelopment/laravel-test-runner:7.4
